@@ -1,0 +1,73 @@
+"""
+Part1 - Todolist
+    -Install and crete a virtual enivironement
+        python3.9 -m venv env
+        source env/bin/activate
+    -Install and creat an empty Django project
+         pip install django
+         django-admin startproject shop
+         cd shop/ 
+Part2 - 
+    -Create app for core pages
+        - python manage.py startapp core
+    -Create a simple base.html file
+        - mkdir core/templates
+        - mkdir core/templates/core
+        - touch core/templates/core/base.html
+        - Add the Play CDN script tag to the <head> of your HTML file:
+                <script src="https://cdn.tailwindcss.com"></script>
+    -Extend base.html and use for front pages
+        -  at core/views.py add:
+            def frontpage(request):
+                return render(request, 'core/base.html')
+        - at urls.py add:
+        -   ....
+                from core.views import frontpage
+
+                    urlpatterns = [
+                            path('',frontpage,name='frontpage'),
+            ...
+        - at settings.py:add:
+           INSTALLED_APPS = [
+                             ...
+                            'core',
+
+                            ]                          
+    -Add "products" to front page
+Part 3 -
+    - Create app for products
+        python manage.py startapp product
+        and add the 'product' to Setting
+    - create database model for category
+        class Category(models.Model) with name and slug in product application
+        migrate
+    - add categories in admin interface
+        from .models import Category
+        admin.site.register(Category)
+        and create a super user to use the admin interface
+    - create products model for category
+        class Product(models.Model):
+        category = models.ForeignKey(Category,related_name='products',on_delete=models.CASCADE)
+        name ,  slug , price , description , created_at 
+                                ordering = ('-created_at',)
+        and register it with admin
+    - add products in admin interface
+    - show products on the front page
+        add in core/view at the frontpage methode:
+                products = Product.objects.all()[0:8]
+                return render(request, 'core/frontpage.html',{'products':products})
+        add product  with boucle for in frontoage.html:
+            {%for product in products%} ... a href="#">{{product.name}}</a> ... {%endfor%}
+
+Part3 - 
+    - Creat html for the category/shope page
+        add a shop methode in core/view:
+         def shop(request): products = Product.objects.all()    
+                return render(request, 'core/shop.html',{'products':products})
+        add the url:   path('shop/',shop,name='shop'),
+
+        add in the base.html the link: <li><a href="{%url 'shop'%}">Shope</a></li>
+        creat shop.htm like frontpage.html without headers
+            and ad sidebar wuith input search and list of categories
+    - creat html for the product detail
+"""
